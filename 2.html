@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>background</title>
+</head>
+<body>
+
+<p>
+	<canvas id="canvas1" style="background-color: white;"></canvas>
+</p>
+
+</body>
+<script src="processing.min.js"></script> 
+
+
+
+
+
+<script>
+     var utkarsh = function(utkarshcreated)
+     {
+          with (utkarshcreated)
+          {
+            size(1400,600);
+            frameRate(50);
+            //code for animation
+        var ballCycle = {
+    numBalls: 65,
+    ballSize: 5,
+    positions: [],
+    movements: [],
+    maxSpeed: 7,
+    minSpeed: 2,
+    a:0,
+    p: function(){
+        for(this.a = 0;this.a < this.numBalls;this.a++){
+            
+            this.movements.push([floor(random(this.minSpeed,this.maxSpeed + 1)),floor(random(this.minSpeed,this.maxSpeed + 1))]);
+            this.positions.push([floor(random(0,1400)),floor(random(0,600))]);
+        }
+    },
+    draw:function(){
+        fill(0, 255 - 183, 255,15);
+        rect(0,0,1400,600);
+        fill(0, 255, 0);
+        noStroke();
+        for(this.a = 0;this.a < this.numBalls;this.a++){
+            //draw the balls
+            ellipse(this.positions[this.a][0], this.positions[this.a][1], this.ballSize, this.ballSize);
+            
+            //increment the x positions of the balls
+            this.positions[this.a][0] += this.movements[this.a][0];
+            
+            //check if the ball has reached the edge of the screen
+            if(this.positions[this.a][0] + this.ballSize / 2 >= 1400){
+                this.movements[this.a][0] = -floor(random(this.minSpeed,this.maxSpeed + 1));
+            }else if(this.positions[this.a][0] - this.ballSize / 2 <= 0){
+                this.movements[this.a][0] = floor(random(this.minSpeed,this.maxSpeed + 1));
+            }
+            
+            //increment the y positions of the balls
+            this.positions[this.a][1] += this.movements[this.a][1];
+            
+            //check if the ball has reached the edge of the screen
+            if(this.positions[this.a][1] + this.ballSize / 2 >= 600){
+                this.movements[this.a][1] = -floor(random(this.minSpeed,this.maxSpeed + 1));
+            }else if(this.positions[this.a][1] - this.ballSize / 2 <= 0){
+                this.movements[this.a][1] = floor(random(this.minSpeed,this.maxSpeed + 1));
+            }
+            
+            //make sure the ball has not collided with any other balls
+            for(var b = 0;b < this.numBalls;b++){
+                if(this.a === b){
+                    continue;
+                }
+                if(dist(this.positions[this.a][0], this.positions[this.a][1], this.positions[b][0], this.positions[b][1]) < this.ballSize){
+                    this.movements[this.a][0] *= -1;
+                    this.movements[this.a][1] *= -1;
+                }
+            }
+        }
+    }
+};
+
+
+ballCycle.p();
+frameRate(0);
+var frame = {
+    count: 0,
+    lastm: second(),
+    frameR: 0,
+    find: function(){
+        this.count++;
+        if(this.lastm !== second()){
+            this.frameR = this.count;
+            this.count = 0;
+            this.lastm = second();
+        }
+    }
+};
+var find = function(){
+    var c = createGraphics(20,20,JAVA2D);
+    c.beginDraw();
+    c.fill(255, 0, 0);
+    c.textAlign(CENTER,CENTER);
+    c.text(frame.frameR,10,10);
+    c.endDraw();
+    return c;
+};
+
+var draw = function(){
+    image(find(),0,0);
+    ballCycle.draw();
+    frame.find();
+    if(frame.frameR > 100){
+        frameRate(100);
+    }else{
+        frameRate(0);
+    }
+};    
+    
+}};
+ var canvas = document.getElementById("canvas1");
+     var utkarshcreated = new Processing(canvas, utkarsh);
+     </script>
+</html>
